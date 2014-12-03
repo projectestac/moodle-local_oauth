@@ -27,3 +27,8 @@ $string['update_error'] = 'Error actualitzant la informació del client';
 $string['delete_error'] = 'Error eliminant el client';
 
 $string['scope_user_info'] = 'Informació del perfil d\'usuari';
+
+$string['event_user_not_granted'] = 'Usuari no autoritzat';
+$string['event_user_granted'] = 'Usuari autoritzat';
+$string['event_user_info_request'] = 'Petició de dades d\'usuari';
+$string['event_user_info_request_failed'] = 'Error en la petició de dades d\'usuari';

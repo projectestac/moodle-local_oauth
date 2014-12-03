@@ -27,3 +27,8 @@ $string['update_error'] = 'Error occurred updating client data';
 $string['delete_error'] = 'Error occurred deleting client';
 
 $string['scope_user_info'] = 'User Profile Information';
+
+$string['event_user_not_granted'] = 'User not granted';
+$string['event_user_granted'] = 'User granted';
+$string['event_user_info_request'] = 'User info requested';
+$string['event_user_info_request_failed'] = 'User info request failed';

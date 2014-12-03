@@ -27,3 +27,8 @@ $string['update_error'] = 'Ocurrió un error actualizando la información del cl
 $string['delete_error'] = 'Ocurrió un error eliminando el cliente';
 
 $string['scope_user_info'] = 'Información del perfil de usuario';
+
+$string['event_user_not_granted'] = 'Usuario no autorizado';
+$string['event_user_granted'] = 'Usuario autorizado';
+$string['event_user_info_request'] = 'Petición de datos de usuario';
+$string['event_user_info_request_failed'] = 'Error en la petición de datos de usuario';

@@ -46,17 +46,24 @@ if (isloggedin() and !isguestuser()) {
     $response = new OAuth2\Response();
 
     if (!$server->validateAuthorizeRequest($request, $response)) {
+        $logparams = array('other' => array('clientid' => $clientid, 'scope' => $scope));
+        $event = \local_oauth\event\user_not_granted::create($logparams);
+        $event->trigger();
+
         $response->send();
         die();
     }
 
     $isauthorized = get_authorization_from_form($url, $clientid, $scope);
 
+    $logparams = array('objectid' => $USER->id, 'other' => array('clientid' => $clientid, 'scope' => $scope));
     if ($isauthorized) {
-        add_to_log(SITEID, 'oauth', 'login', 'local/oauth/login.php', $scope. ' authorized', 0, $USER->id);
+        $event = \local_oauth\event\user_granted::create($logparams);
+
     } else {
-        add_to_log(SITEID, 'oauth', 'login', 'local/oauth/login.php', $scope. ' unauthorized', 0, $USER->id);
+        $event = \local_oauth\event\user_not_granted::create($logparams);
     }
+    $event->trigger();
 
     // print the authorization code if the user has authorized your client
     $server->handleAuthorizeRequest($request, $response, $isauthorized, $USER->id);
