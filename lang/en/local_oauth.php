@@ -34,4 +34,4 @@ $string['event_user_info_request'] = 'User info requested';
 $string['event_user_info_request_failed'] = 'User info request failed';
 
 $string['client_id_help'] = 'Identifier to be used from the client form in order to reference this provider. It has to be unique. For instance, a valid identifier could be "nodes" or "bloc1".';
-$string['redirect_uri_help'] = 'URI where to redirect after login. For instance, for WordPress installation which have the WP Social Login plugin, the redirect URI is like <i>http://wordpress_server/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i><ul><li>URL1</li><li>URL2</li></ul>';
+$string['redirect_uri_help'] = 'URI where to redirect after login. For instance, for XTECBlocs or Nodes, the redirect URI are like: <ul><li>XTECBlocs: <i>http://blocs.xtec.cat/nomdelbloc/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i></li><li>NODES: <i>http://agora.xtec.cat/nomdelcentre/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i></li></ul>';
