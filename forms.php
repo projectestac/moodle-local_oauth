@@ -8,10 +8,13 @@ class local_oauth_clients_form extends moodleform {
 		$bform->addElement('hidden', 'action', 'add');
 		$bform->setType('action', PARAM_ACTION);
 
+        // Adding the "general" fieldset, where all the common settings are showed
+        $bform->addElement('header', 'general', get_string('general', 'form'));
 
 		$bform->addElement('text', 'client_id', get_string('client_id', 'local_oauth'), array('maxlength' => 80, 'size' => 45));
 		$bform->addRule('client_id', null, 'required', null, 'client');
 		$bform->setType('client_id', PARAM_TEXT);
+        $bform->addHelpButton('client_id', 'client_id', 'local_oauth');
 
 		$action = optional_param('action', false, PARAM_TEXT);
 		if ($action == 'edit') {
@@ -23,7 +26,11 @@ class local_oauth_clients_form extends moodleform {
 
 		$bform->addElement('text', 'redirect_uri', get_string('redirect_uri', 'local_oauth'), array('maxlength' => 1333, 'size' => 45));
 		$bform->setType('redirect_uri', PARAM_URL);
+        $bform->addHelpButton('redirect_uri', 'redirect_uri', 'local_oauth');
 
+        //-------------------------------------------------------------------------------
+        // Adding the rest of settings, spreading all them into this fieldset
+        $bform->addElement('header', 'othersettings', get_string('othersettings', 'form'));
 		$bform->addElement('text', 'grant_types', get_string('grant_types', 'local_oauth'), array('maxlength' => 80, 'size' => 45));
 		$bform->setType('grant_types', PARAM_TEXT);
 

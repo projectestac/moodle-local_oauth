@@ -32,3 +32,6 @@ $string['event_user_not_granted'] = 'User not granted';
 $string['event_user_granted'] = 'User granted';
 $string['event_user_info_request'] = 'User info requested';
 $string['event_user_info_request_failed'] = 'User info request failed';
+
+$string['client_id_help'] = 'Identifier to be used from the client form in order to reference this provider. It has to be unique. For instance, a valid identifier could be "nodes" or "bloc1".';
+$string['redirect_uri_help'] = 'URI where to redirect after login. For instance, for WordPress installation which have the WP Social Login plugin, the redirect URI is like <i>http://wordpress_server/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i><ul><li>URL1</li><li>URL2</li></ul>';

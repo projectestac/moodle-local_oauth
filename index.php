@@ -68,9 +68,9 @@ switch ($action) {
 		} else {
 			$form->client_id                = "";
 			$form->redirect_uri                = "";
-			$form->grant_types = "";
-			$form->scope  = "";
-			$form->user_id            = "";
+			$form->grant_types = "authorization_code";
+			$form->scope  = "user_info";
+			$form->user_id            = "0";
 			$form->action              = 'add';
 		}
 	    $bform->set_data($form);
