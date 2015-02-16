@@ -33,5 +33,5 @@ $string['event_user_granted'] = 'User granted';
 $string['event_user_info_request'] = 'User info requested';
 $string['event_user_info_request_failed'] = 'User info request failed';
 
-$string['client_id_help'] = 'ID de la aplicación para utilizar en el formulario del cliente (Nodes o XTECBlocs) para referenciar el proveedor. Debe ser único. Por ejemplo, un ID de la aplicación válido puede ser "nodes" o "bloc1".';
-$string['redirect_uri_help'] = 'URI donde redirigir después de la autenticación. Por ejemplo, para XTECBlocs o Nodes, la URL de redirección debe ser parecida a: <ul><li>XTECBlocs: <i>http://blocs.xtec.cat/nomdelbloc/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i></li><li>NODES: <i>http://agora.xtec.cat/nomdelcentre/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i></li></ul>';
+$string['client_id_help'] = 'Identifier to be used from the client form in order to reference this provider. It has to be unique. For instance, a valid identifier could be "nodes" or "bloc1".';
+$string['redirect_uri_help'] = 'URI where to redirect after login. For instance, for XTECBlocs or Nodes, the redirect URI are like: <ul><li>XTECBlocs: <i>http://blocs.xtec.cat/nomdelbloc/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i></li><li>NODES: <i>http://agora.xtec.cat/nomdelcentre/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i></li></ul>';
