@@ -3,8 +3,9 @@
 $string['pluginname'] = 'Proveïdor OAuth';
 $string['settings'] = 'Configuració del proveïdor OAuth';
 $string['addclient'] = 'Afegeix client nou';
-$string['addnodesclient'] = 'Afegeix client de nodes';
-$string['addwordpressclient'] = 'Afegeix client de Wordpress';
+$string['addotherclient'] = 'Afegeix altres clients';
+$string['addnodesclient'] = 'Afegeix client Àgora-Nodes';
+$string['addwordpressclient'] = 'Afegeix client XTECBlocs';
 
 $string['client_id'] = 'Identificador de client';
 $string['client_secret'] = 'Clau secreta de client';
@@ -12,7 +13,7 @@ $string['redirect_uri'] = 'URL de redirecció';
 $string['grant_types'] = 'Tipus de concessió';
 $string['scope'] = 'Abast';
 $string['user_id'] = 'ID d\'usuari';
-$string['wp_url'] = 'URL del Wordpress';
+$string['wp_url'] = 'URL del blog';
 
 $string['auth_question'] = 'Voleu autorizar l\'accés a <strong>{$a}</strong>?';
 $string['auth_question_desc'] = 'L\'aplicació está demanant accés a la informació següent del seu compte:';

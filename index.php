@@ -134,13 +134,18 @@ switch ($action) {
 }
 
 if ($view_table) {
-	echo '<p><input onclick="document.location.href=\'index.php?action=add\';" type="submit" value="'.get_string('addclient', 'local_oauth').'" />';
+	echo '<p>';
 	if (function_exists('is_agora') && is_agora()) {
 		if (is_service_enabled('nodes') && !$DB->record_exists('oauth_clients', array('client_id' => 'nodes'))) {
-			echo '<input onclick="document.location.href=\'index.php?action=addnodes\';" type="submit" value="'.get_string('addnodesclient', 'local_oauth').'" />';
+			echo '<a href="index.php?action=addnodes" class="btn btn-primary" style="margin-right: 10px;">'.get_string('addnodesclient', 'local_oauth').'</a>';
 		}
-		echo '<input onclick="document.location.href=\'index.php?action=addwordpress\';" type="submit" value="'.get_string('addwordpressclient', 'local_oauth').'" />';
+		echo '<a href="index.php?action=addwordpress" class="btn btn-primary" style="margin-right: 10px;">'.get_string('addwordpressclient', 'local_oauth').'</a>';
+		echo '<a href="index.php?action=add" class="btn">'.get_string('addotherclient', 'local_oauth').'</a>';
+	} else {
+		echo '<a href="index.php?action=add" class="btn">'.get_string('addclient', 'local_oauth').'</a>';
 	}
+
+
 	echo '</p>';
 
 	$clients = $DB->get_records('oauth_clients');

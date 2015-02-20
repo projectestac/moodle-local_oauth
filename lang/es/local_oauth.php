@@ -3,8 +3,9 @@
 $string['pluginname'] = 'Proveedor de OAuth';
 $string['settings'] = 'Configuración del proveedor de OAuth';
 $string['addclient'] = 'Añadir nuevo cliente';
-$string['addnodesclient'] = 'Añadir cliente nodes';
-$string['addwordpressclient'] = 'Añadir cliente Wordpress';
+$string['addotherclient'] = 'Añadir otros clientes';
+$string['addnodesclient'] = 'Añadir cliente Àgora-Nodes';
+$string['addwordpressclient'] = 'Añadir cliente XTECBlocs';
 
 $string['client_id'] = 'Identificador de cliente';
 $string['client_secret'] = 'Clave secreta de cliente';
@@ -12,7 +13,7 @@ $string['redirect_uri'] = 'URL de redirección';
 $string['grant_types'] = 'Tipos de concesión';
 $string['scope'] = 'Ámbito';
 $string['user_id'] = 'ID de usuario';
-$string['wp_url'] = 'URL del Wordpress';
+$string['wp_url'] = 'URL del blog';
 
 $string['auth_question'] = '¿Quiere autorizar el acceso a <strong>{$a}</strong>?';
 $string['auth_question_desc'] = 'La aplicación está pidiendo acceso a la siguiente información de su cuenta:';

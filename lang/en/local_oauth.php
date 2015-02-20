@@ -3,8 +3,9 @@
 $string['pluginname'] = 'OAuth provider';
 $string['settings'] = 'OAuth provider settings';
 $string['addclient'] = 'Add new client';
-$string['addnodesclient'] = 'Add nodes client';
-$string['addwordpressclient'] = 'Add WordPress client';
+$string['addotherclient'] = 'Add other client';
+$string['addnodesclient'] = 'Add Àgora-Nodes client';
+$string['addwordpressclient'] = 'Add XTECBlocs client';
 
 $string['client_id'] = 'Client identifier';
 $string['client_secret'] = 'Client secret Key';
@@ -12,7 +13,7 @@ $string['redirect_uri'] = 'Redirect URL';
 $string['grant_types'] = 'Grant Types';
 $string['scope'] = 'Scope';
 $string['user_id'] = 'User ID';
-$string['wp_url'] = 'WordPress URL';
+$string['wp_url'] = 'Blog URL';
 
 $string['auth_question'] = 'Do you want to authorize <strong>{$a}</strong>?';
 $string['auth_question_desc'] = 'This application is asking to have access this information over your account:';
