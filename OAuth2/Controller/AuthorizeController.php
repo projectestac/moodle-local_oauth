@@ -339,6 +339,13 @@ class AuthorizeController implements AuthorizeControllerInterface
                 }
             }
         }
+        //XTEC *********** AFEGIT Check also http
+        //@pferre22 20.02.2015
+        $nossl = preg_replace("/^https:/i", "http:", $inputUri);
+        if ($inputUri != $nossl) {
+            return $this->validateRedirectUri($nossl, $registeredUriString);
+        }
+        //FI PATCH
 
         return false;
     }

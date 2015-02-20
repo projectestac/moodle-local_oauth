@@ -56,7 +56,7 @@ function is_scope_authorized_by_user($userid, $clientid, $scope = false) {
 
 function authorize_user_scope($userid, $clientid, $scope = false) {
     global $DB;
-    if(!$scope) {
+    if (!$scope) {
     	$scope = 'login';
     }
     $record = new StdClass();
