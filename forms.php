@@ -65,9 +65,6 @@ class local_oauth_clients_wp_form extends moodleform {
 		$bform->addElement('hidden', 'action', 'addwordpress');
 		$bform->setType('action', PARAM_ACTION);
 
-        // Adding the "general" fieldset, where all the common settings are showed
-        $bform->addElement('header', 'general', get_string('general', 'form'));
-
 		$bform->addElement('text', 'client_id', get_string('client_id', 'local_oauth'), array('maxlength' => 80, 'size' => 45));
 		$bform->addRule('client_id', null, 'required', null, 'client');
 		$bform->setType('client_id', PARAM_TEXT);
