@@ -31,6 +31,7 @@ class local_oauth_clients_form extends moodleform {
         //-------------------------------------------------------------------------------
         // Adding the rest of settings, spreading all them into this fieldset
         $bform->addElement('header', 'othersettings', get_string('othersettings', 'form'));
+        $bform->setExpanded('othersettings', false);
 		$bform->addElement('text', 'grant_types', get_string('grant_types', 'local_oauth'), array('maxlength' => 80, 'size' => 45));
 		$bform->setType('grant_types', PARAM_TEXT);
 
