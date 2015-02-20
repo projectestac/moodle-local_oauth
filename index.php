@@ -34,7 +34,7 @@ switch ($action) {
 		} else if ($fromform=$bform->get_data() and confirm_sesskey()) {
 			//get values
 			$record = new stdClass();
-			$record->redirect_uri = $fromform->redirect_uri;
+			$record->redirect_uri = oauth_no_ssl_url($fromform->redirect_uri);
 			$record->grant_types = $fromform->grant_types;
 			$record->scope = $fromform->scope;
 			$record->user_id = $fromform->user_id ? $fromform->user_id :'';
@@ -61,7 +61,7 @@ switch ($action) {
         //set values
 		if (isset($client_edit)) {
 		    $form->client_id           = $client_edit->client_id;
-			$form->redirect_uri        = $client_edit->redirect_uri;
+			$form->redirect_uri        = oauth_no_ssl_url($client_edit->redirect_uri);
 			$form->grant_types         = $client_edit->grant_types;
 			$form->scope 			   = $client_edit->scope;
 			$form->user_id 			   = $client_edit->user_id;
