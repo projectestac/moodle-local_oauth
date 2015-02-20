@@ -27,9 +27,9 @@ $string['saveok'] = 'El cliente se ha guardado correctamente';
 $string['confirmdeletestr'] = 'Está seguro que quiere eleminar el cliente {$a}?';
 $string['delok'] = 'El cliente se ha eliminado correctamente';
 $string['client_id_existing_error'] = 'El identificador de cliente especificado ya existe, seleccione otro';
-$string['insert_error'] = 'Ocurrió un error creando el cliente';
-$string['update_error'] = 'Ocurrió un error actualizando la información del cliente';
-$string['delete_error'] = 'Ocurrió un error eliminando el cliente';
+$string['insert_error'] = 'Se ha producido un error creando el cliente';
+$string['update_error'] = 'Se ha producido un error actualizando la información del cliente';
+$string['delete_error'] = 'Se ha producido un error eliminando el cliente';
 
 $string['scope_user_info'] = 'Información del perfil de usuario';
 
@@ -38,5 +38,5 @@ $string['event_user_granted'] = 'Usuario autorizado';
 $string['event_user_info_request'] = 'Petición de datos de usuario';
 $string['event_user_info_request_failed'] = 'Error en la petición de datos de usuario';
 
-$string['client_id_help'] = 'ID de la aplicación para utilizar en el formulario del cliente (Nodes o XTECBlocs) para referenciar el proveedor. Debe ser único. Por ejemplo, un ID de la aplicación válido puede ser "nodes" o "bloc1".';
+$string['client_id_help'] = 'ID de la aplicación para utilizar en el formulario del cliente (XTECBlocs o Nodes) para referenciar el proveedor. Debe ser único. Por ejemplo, un ID de la aplicación válido puede ser "blog1" o "nodes".';
 $string['redirect_uri_help'] = 'URI donde redirigir después de la autenticación. Por ejemplo, para XTECBlocs o Nodes, la URL de redirección debe ser parecida a: <ul><li>XTECBlocs: <i>http://blocs.xtec.cat/nomdelbloc/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i></li><li>NODES: <i>http://agora.xtec.cat/nomdelcentre/wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle</i></li></ul>';
