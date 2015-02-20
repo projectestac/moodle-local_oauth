@@ -25,6 +25,7 @@ $string['client_not_exists'] = 'El client no existeix';
 $string['saveok'] = 'El client s\'ha desat correctament';
 $string['confirmdeletestr'] = 'Segur que vols eliminar el client {$a}?';
 $string['delok'] = 'El clients\'ha eliminat correctament';
+$string['client_id_existing_error'] = 'L\'identificador de client especificat ja existeix, cal seleccionar-ne un altre';
 $string['insert_error'] = 'Error creant el client';
 $string['update_error'] = 'Error actualitzant la informació del client';
 $string['delete_error'] = 'Error eliminant el client';

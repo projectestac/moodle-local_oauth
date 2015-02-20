@@ -25,6 +25,7 @@ $string['client_not_exists'] = 'Client does not exist';
 $string['saveok'] = 'Client successfully saved';
 $string['confirmdeletestr'] = 'Are you sure you want to delete client {$a}?';
 $string['delok'] = 'Client successfully deleted';
+$string['client_id_existing_error'] = 'The Client identifier specified already exists, please choose another one';
 $string['insert_error'] = 'Error occurred creating client';
 $string['update_error'] = 'Error occurred updating client data';
 $string['delete_error'] = 'Error occurred deleting client';

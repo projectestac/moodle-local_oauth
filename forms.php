@@ -45,6 +45,16 @@ class local_oauth_clients_form extends moodleform {
 		$this->add_action_buttons();
 
 	}
+
+	function validation($data, $files) {
+        global $DB;
+        $errors = parent::validation($data, $files);
+		if ($DB->record_exists('oauth_clients', array('client_id' => $data['client_id']))) {
+			$errors['client_id'] = get_string('client_id_existing_error', 'local_oauth');
+		}
+
+        return $errors;
+    }
 }
 
 class local_oauth_clients_wp_form extends moodleform {
@@ -69,6 +79,16 @@ class local_oauth_clients_wp_form extends moodleform {
 
 		$this->add_action_buttons();
 	}
+
+	function validation($data, $files) {
+        global $DB;
+        $errors = parent::validation($data, $files);
+		if ($DB->record_exists('oauth_clients', array('client_id' => $data['client_id']))) {
+			$errors['client_id'] = get_string('client_id_existing_error', 'local_oauth');
+		}
+
+        return $errors;
+    }
 }
 
 class local_oauth_authorize_form extends moodleform {
