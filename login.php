@@ -46,7 +46,7 @@ if (isloggedin() and !isguestuser()) {
     $response = new OAuth2\Response();
 
     if (!$server->validateAuthorizeRequest($request, $response)) {
-        $logparams = array('other' => array('clientid' => $clientid, 'scope' => $scope));
+        $logparams = array('objectid' => $USER->id, 'other' => array('clientid' => $clientid, 'scope' => $scope));
         $event = \local_oauth\event\user_not_granted::create($logparams);
         $event->trigger();
 
