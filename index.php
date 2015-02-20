@@ -77,6 +77,22 @@ switch ($action) {
 	    $bform->display();
 
 		break;
+	case 'addnodes':
+		$record = new stdClass();
+		$record->redirect_uri = get_service_url('nodes').'wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle';
+		$record->grant_types = 'authorization_code';
+		$record->scope = 'user_info	';
+		$record->user_id = '';
+
+		//do save
+		$record->client_id = 'nodes';
+		$record->client_secret = generate_secret();
+		if (!$DB->insert_record('oauth_clients', $record)) {
+			print_error('insert_error', 'local_oauth');
+		}
+		echo $OUTPUT->notification(get_string('saveok', 'local_oauth'), 'notifysuccess');
+		$view_table = true;
+		break;
 	case 'del':
 		//get values
 		$confirm   = optional_param('confirm', 0, PARAM_INT);
@@ -111,7 +127,13 @@ switch ($action) {
 }
 
 if ($view_table) {
-	echo '<p><input onclick="document.location.href=\'index.php?action=add\';" type="submit" value="'.get_string('addclient', 'local_oauth').'" /></p>';
+	echo '<p><input onclick="document.location.href=\'index.php?action=add\';" type="submit" value="'.get_string('addclient', 'local_oauth').'" />';
+	if (function_exists('is_agora') && is_agora()) {
+		if (is_service_enabled('nodes') && !$DB->record_exists('oauth_clients', array('client_id' => 'nodes'))) {
+			echo '<input onclick="document.location.href=\'index.php?action=addnodes\';" type="submit" value="'.get_string('addnodesclient', 'local_oauth').'" />';
+		}
+	}
+	echo '</p>';
 
 	$clients = $DB->get_records('oauth_clients');
 

@@ -3,6 +3,7 @@
 $string['pluginname'] = 'Proveedor de OAuth';
 $string['settings'] = 'Configuración del proveedor de OAuth';
 $string['addclient'] = 'Añadir nuevo cliente';
+$string['addnodesclient'] = 'Añadir cliente nodes';
 
 $string['client_id'] = 'Identificador de cliente';
 $string['client_secret'] = 'Clave secreta de cliente';
