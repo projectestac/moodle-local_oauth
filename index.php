@@ -3,6 +3,7 @@ require_once('../../config.php');
 require_once("{$CFG->libdir}/formslib.php");
 require_once($CFG->libdir.'/adminlib.php');
 require_once('forms.php');
+require_once('locallib.php');
 
 require_login();
 
@@ -77,17 +78,23 @@ switch ($action) {
 	    $bform->display();
 
 		break;
+	case 'addwordpress':
+		$bform = new local_oauth_clients_wp_form();
+		if ($bform->is_cancelled()) {
+			$view_table = true;
+			break;
+		} else if ($fromform=$bform->get_data() and confirm_sesskey()) {
+			if (!oauth_add_wordpress_client($fromform->client_id, $fromform->url)) {
+				print_error('insert_error', 'local_oauth');
+			}
+			echo $OUTPUT->notification(get_string('saveok', 'local_oauth'), 'notifysuccess');
+			$view_table = true;
+			break;
+		}
+	    $bform->display();
+		break;
 	case 'addnodes':
-		$record = new stdClass();
-		$record->redirect_uri = get_service_url('nodes').'wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle';
-		$record->grant_types = 'authorization_code';
-		$record->scope = 'user_info	';
-		$record->user_id = '';
-
-		//do save
-		$record->client_id = 'nodes';
-		$record->client_secret = generate_secret();
-		if (!$DB->insert_record('oauth_clients', $record)) {
+		if (!oauth_add_wordpress_client('nodes', get_service_url('nodes'))) {
 			print_error('insert_error', 'local_oauth');
 		}
 		echo $OUTPUT->notification(get_string('saveok', 'local_oauth'), 'notifysuccess');
@@ -132,6 +139,7 @@ if ($view_table) {
 		if (is_service_enabled('nodes') && !$DB->record_exists('oauth_clients', array('client_id' => 'nodes'))) {
 			echo '<input onclick="document.location.href=\'index.php?action=addnodes\';" type="submit" value="'.get_string('addnodesclient', 'local_oauth').'" />';
 		}
+		echo '<input onclick="document.location.href=\'index.php?action=addwordpress\';" type="submit" value="'.get_string('addwordpressclient', 'local_oauth').'" />';
 	}
 	echo '</p>';
 
