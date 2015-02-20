@@ -25,6 +25,7 @@ class local_oauth_clients_form extends moodleform {
 		}
 
 		$bform->addElement('text', 'redirect_uri', get_string('redirect_uri', 'local_oauth'), array('maxlength' => 1333, 'size' => 45));
+		$bform->addRule('redirect_uri', null, 'required', null, 'client');
 		$bform->setType('redirect_uri', PARAM_URL);
         $bform->addHelpButton('redirect_uri', 'redirect_uri', 'local_oauth');
 
@@ -63,6 +64,7 @@ class local_oauth_clients_wp_form extends moodleform {
         $bform->addHelpButton('client_id', 'client_id', 'local_oauth');
 
 		$bform->addElement('text', 'url', get_string('wp_url', 'local_oauth'), array('maxlength' => 1333, 'size' => 45));
+		$bform->addRule('url', null, 'required', null, 'client');
 		$bform->setType('url', PARAM_URL);
 
 		$this->add_action_buttons();
