@@ -71,7 +71,7 @@ class user_info_request extends \core\event\base {
     protected function init() {
         $this->context = \context_system::instance();
         $this->data['crud'] = 'r';
-        $this->data['level'] = self::LEVEL_OTHER;
+        $this->data['edulevel'] = self::LEVEL_OTHER;
     }
 
     /**
