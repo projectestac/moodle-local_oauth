@@ -66,18 +66,3 @@ function authorize_user_scope($userid, $clientid, $scope = false) {
 
     $DB->insert_record('oauth_user_auth_scopes', $record);
 }
-
-function local_oauth_cron() {
-    global $DB;
-
-    mtrace("Executing OAuth cron...", "\n");
-    mtrace("Deleting expired tokens...", "\n");
-
-    $time = time();
-    $DB->delete_records_select('oauth_access_tokens', 'expires < :time', array('time' => $time));
-    $DB->delete_records_select('oauth_authorization_codes', 'expires < :time', array('time' => $time));
-    $DB->delete_records_select('oauth_refresh_tokens', 'expires < :time', array('time' => $time));
-
-
-    mtrace("OAuth cron done.", "\n");
-}
