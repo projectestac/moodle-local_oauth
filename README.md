@@ -10,9 +10,7 @@ It provides an [OAuth2](https://tools.ietf.org/html/rfc6749 "RFC6749") server so
 
 
 ## Instalation steps
-1. Clone this repository in a directory named "oauth". 
-
-> `$ git clone https://github.com/cognitivabrasil/moodle-local_oauth.git oauth`
+1. Clone this repository in a directory named "oauth".  `$ git clone https://github.com/cognitivabrasil/moodle-local_oauth.git oauth`
 
 2. Compress it to a _.zip_ file.
 
