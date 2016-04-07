@@ -7,6 +7,8 @@ It provides an [OAuth2](https://tools.ietf.org/html/rfc6749 "RFC6749") server so
 ## Requirements
 * Moodle 3.0 installed
 * Admin account 
+
+
 ## Instalation steps
 1. Clone this repository in a directory named "oauth". 
 
