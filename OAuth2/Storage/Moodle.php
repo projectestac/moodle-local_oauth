@@ -47,7 +47,7 @@ class Moodle implements
     public function isPublicClient($client_id)
     {
         global $DB;
-        $client = $DB->get_field('oauth_clients', array('client_id' => $client_id));
+        $client = $DB->get_record('oauth_clients', array('client_id' => $client_id));
         if (!$client) {
             return false;
         }
