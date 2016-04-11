@@ -47,7 +47,7 @@ class Moodle implements
     public function isPublicClient($client_id)
     {
         global $DB;
-        $client = $DB->get_field('oauth_clients', array('client_id' => $client_id));
+        $client = $DB->get_record('oauth_clients', array('client_id' => $client_id));
         if (!$client) {
             return false;
         }
@@ -69,7 +69,7 @@ class Moodle implements
     public function setClientDetails($client_id, $client_secret = null, $redirect_uri = null, $grant_types = null, $scope = null, $user_id = null)
     {
         global $DB;
-        if ($client = $DB->get_field('oauth_clients', array('client_id' => $client_id))) {
+        if ($client = $DB->get_record('oauth_clients', array('client_id' => $client_id))) {
             $client->client_secret = $client_secret;
             $client->redirect_uri = $redirect_uri;
             $client->grant_types = $grant_types;
