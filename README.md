@@ -1,13 +1,11 @@
-# OAuth2 Server Plugin for Moodle.
+# OAuth2 Server Plugin for Moodle
 
-
-
-It provides an [OAuth2](https://tools.ietf.org/html/rfc6749 "RFC6749") server so that a user can use its Moodle account to log in to your application. 
+It provides an [OAuth2](https://tools.ietf.org/html/rfc6749 "RFC6749") server so that a user can use its Moodle account to log in to your application.
+Oauth2 Library has been taken from https://github.com/bshaffer/oauth2-server-php
 
 ## Requirements
-* Moodle 3.0 installed
-* Admin account 
-
+* #### Moodle 2.8 o higher installed
+* #### Admin account
 
 ## Instalation steps
 1. Clone this repository in a directory named "oauth".  `$ git clone https://github.com/cognitivabrasil/moodle-local_oauth.git oauth`
@@ -46,14 +44,11 @@ It provides an [OAuth2](https://tools.ietf.org/html/rfc6749 "RFC6749") server so
 
 
 
+**This plugin has been tested on Moodle 2.8 and Moodle 3.0**
 
 
+## Contributors
+Apart from people in this repository, also have contributed:
 
+- [igorpf] (https://github.com/igorpf)
 
-
-
-**This plugin has been tested on Moodle 3.0**
-
-Forked from https://github.com/projectestac/moodle-local_oauth.
-
-Oauth2 Library taken from [here](https://github.com/bshaffer/oauth2-server-php)
