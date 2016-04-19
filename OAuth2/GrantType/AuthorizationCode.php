@@ -54,7 +54,7 @@ class AuthorizationCode implements GrantTypeInterface
         // $our_uri is the configured path in the application, so use strncmp
         // to assure both strings are equal up to before the query parameters begin
         if (isset($authCode['redirect_uri']) && $our_uri) {
-            if (!$request_uri || strncmp(urldecode($request_uri), $our_uri, strlen($our_uri)) {
+            if (!$request_uri || strncmp(urldecode($request_uri), $our_uri, strlen($our_uri))) {
                 $response->setError(400, 'redirect_uri_mismatch', "The redirect URI is missing or do not match", "#section-4.1.3");
 
                 return false;

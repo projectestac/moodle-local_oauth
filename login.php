@@ -28,10 +28,15 @@ require_once('lib.php');
 $clientid = required_param('client_id', PARAM_RAW);
 $responsetype = required_param('response_type', PARAM_RAW);
 $scope = optional_param('scope', false, PARAM_TEXT);
+$state = optional_param('state', false, PARAM_TEXT);
 $url = $CFG->wwwroot.'/local/oauth/login.php?client_id='.$clientid.'&response_type='.$responsetype;
 
 if ($scope) {
     $url .= '&scope='.$scope;
+}
+
+if ($state) {
+    $url .= '&state='.$state;
 }
 
 $PAGE->set_url($CFG->wwwroot.'/local/oauth/login.php');
