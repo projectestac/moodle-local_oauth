@@ -48,8 +48,13 @@ class AuthorizationCode implements GrantTypeInterface
          * 4.1.3 - ensure that the "redirect_uri" parameter is present if the "redirect_uri" parameter was included in the initial authorization request
          * @uri - http://tools.ietf.org/html/rfc6749#section-4.1.3
          */
-        if (isset($authCode['redirect_uri']) && $authCode['redirect_uri']) {
-            if (!$request->request('redirect_uri') || urldecode($request->request('redirect_uri')) != $authCode['redirect_uri']) {
+        $our_uri = $authCode['redirect_uri'];
+        $request_uri = $request->request('redirect_uri');
+        // Compare URI without parameters (state, code, ...)
+        // $our_uri is the configured path in the application, so use strncmp
+        // to assure both strings are equal up to before the query parameters begin
+        if (isset($authCode['redirect_uri']) && $our_uri) {
+            if (!$request_uri || strncmp(urldecode($request_uri), $our_uri, strlen($our_uri))) {
                 $response->setError(400, 'redirect_uri_mismatch', "The redirect URI is missing or do not match", "#section-4.1.3");
 
                 return false;
