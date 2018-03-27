@@ -4,11 +4,11 @@ It provides an [OAuth2](https://tools.ietf.org/html/rfc6749 "RFC6749") server so
 Oauth2 Library has been taken from https://github.com/bshaffer/oauth2-server-php
 
 ## Requirements
-* #### Moodle 2.8 o higher installed
+* #### Moodle 2.8 or higher installed
 * #### Admin account
 
-## Instalation steps
-1. Clone this repository in a directory named "oauth".  `$ git clone https://github.com/cognitivabrasil/moodle-local_oauth.git oauth`
+## Installation steps
+1. Clone this repository in a directory named "oauth".  `$ git clone https://github.com/projectestac/moodle-local_oauth.git oauth`
 
 2. Compress it to a _.zip_ file.
 
@@ -18,7 +18,7 @@ Oauth2 Library has been taken from https://github.com/bshaffer/oauth2-server-php
 
 5. Choose the _.zip_ file and hit the button _Install Plugin from the ZIP file_.
 
-6. Make sure the directory *path_to_moodle/local/* has writing permissions for moodle. If the validation is ok, install it.
+6. Make sure the directory *path_to_moodle/local/* has writing permissions for Moodle. If the validation is ok, install it.
 
 7. Go to *Site Administration > Server > OAuth provider settings*
 
@@ -36,7 +36,7 @@ Oauth2 Library has been taken from https://github.com/bshaffer/oauth2-server-php
 
 4. Using the code given, your application must send a POST request to `http://moodledomain.com/local/oauth/token.php`  having the following parameters: `{'code': '55c057549f29c428066cbbd67ca6b17099cb1a9e', 'client_id': 'EXAMPLE', 'client_secret': 'codeGivenAfterTheFormWasFilled', 'grant_type': 'authorization_code',   'scope': 'user_info'}`. 
 
-5. If the correct credentials were given, the response should a JSON be like this: `{"access_token":"79d687a0ea4910c6662b2e38116528fdcd65f0d1","expires_in":3600,"token_type":"Bearer","scope":"user_info","refresh_token":"c1de730eef1b2072b48799000ec7cde4ea6d2af0"}`
+5. If the correct credentials were given, the response should be a JSON like this: `{"access_token":"79d687a0ea4910c6662b2e38116528fdcd65f0d1","expires_in":3600,"token_type":"Bearer","scope":"user_info","refresh_token":"c1de730eef1b2072b48799000ec7cde4ea6d2af0"}`
 
 6. Finally, send a POST request to `http://moodledomain.com/local/oauth/user_info.php` passing the access token as a parameter, like: `{'access_token':'79d687a0ea4910c6662b2e38116528fdcd65f0d1'}`. 
 
