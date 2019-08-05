@@ -8,7 +8,7 @@ function oauth_add_wordpress_client($client_id, $url) {
         $url .= '/';
     }
     $record = new stdClass();
-    $record->redirect_uri = oauth_no_ssl_url($url.'wp-content/plugins/wordpress-social-login/hybridauth/?hauth.done=Moodle');
+    $record->redirect_uri = $url . 'wp-content/plugins/wordpress-social-login/hybridauth/callbacks/moodle.php';
     $record->grant_types = 'authorization_code';
     $record->scope = 'user_info ';
     $record->user_id = '';
@@ -17,10 +17,6 @@ function oauth_add_wordpress_client($client_id, $url) {
     $record->client_id = $client_id;
     $record->client_secret = generate_secret();
     return $DB->insert_record('oauth_clients', $record);
-}
-
-function oauth_no_ssl_url($url) {
-    return preg_replace("/^https:/i", "http:", $url);
 }
 
 function generate_secret() {

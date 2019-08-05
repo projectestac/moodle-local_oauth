@@ -34,7 +34,7 @@ switch ($action) {
         } else if ($fromform=$bform->get_data() and confirm_sesskey()) {
             //get values
             $record = new stdClass();
-            $record->redirect_uri = oauth_no_ssl_url($fromform->redirect_uri);
+            $record->redirect_uri = $fromform->redirect_uri;
             $record->grant_types = $fromform->grant_types;
             $record->scope = $fromform->scope;
             $record->user_id = $fromform->user_id ? $fromform->user_id :'';
@@ -61,18 +61,18 @@ switch ($action) {
         //set values
         if (isset($client_edit)) {
             $form->client_id           = $client_edit->client_id;
-            $form->redirect_uri        = oauth_no_ssl_url($client_edit->redirect_uri);
+            $form->redirect_uri        = $client_edit->redirect_uri;
             $form->grant_types         = $client_edit->grant_types;
             $form->scope               = $client_edit->scope;
             $form->user_id             = $client_edit->user_id;
             $form->action              = 'edit';
         } else {
-            $form->client_id                = "";
-            $form->redirect_uri                = "";
-            $form->grant_types = "authorization_code";
-            $form->scope  = "user_info";
-            $form->user_id            = "0";
-            $form->action              = 'add';
+            $form->client_id            = "";
+            $form->redirect_uri         = "";
+            $form->grant_types          = "authorization_code";
+            $form->scope                = "user_info";
+            $form->user_id              = "0";
+            $form->action               = 'add';
         }
         $bform->set_data($form);
         $bform->display();
@@ -135,6 +135,7 @@ switch ($action) {
 
 if ($view_table) {
     echo '<p>';
+
     if (function_exists('is_agora') && is_agora()) {
         if (is_service_enabled('nodes') && !$DB->record_exists('oauth_clients', array('client_id' => 'nodes'))) {
             echo '<a href="index.php?action=addnodes" class="btn btn-primary" style="margin-right: 10px;">'.get_string('addnodesclient', 'local_oauth').'</a>';
@@ -144,7 +145,6 @@ if ($view_table) {
     } else {
         echo '<a href="index.php?action=add" class="btn">'.get_string('addclient', 'local_oauth').'</a>';
     }
-
 
     echo '</p>';
 

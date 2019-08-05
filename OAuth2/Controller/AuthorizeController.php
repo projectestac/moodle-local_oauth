@@ -284,9 +284,17 @@ class AuthorizeController implements AuthorizeControllerInterface
             if (isset($parse_url[$k])) {
                 $parse_url[$k] .= "&" . http_build_query($v);
             } else {
-                $parse_url[$k] = http_build_query($v);
-            }
-        }
+                    // XTEC ************ MODIFICAT - build correct url
+                    // 2019.08.05 @nacho
+                    // 2019.08.05 @mborraz
+                    $parse_url[$k] = http_build_query($v,'','&');
+                    //************ ORIGINAL
+                    /*
+                        $parse_url[$k] = http_build_query($v);
+                    */
+                    //************ FI
+                    }
+                }
 
         // Put humpty dumpty back together
         return
