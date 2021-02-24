@@ -42,6 +42,8 @@ Oauth2 Library has been taken from https://github.com/bshaffer/oauth2-server-php
 
 7. If the token given is valid, a JSON containing the user information is returned. Ex: `{"id":"22","username":"foobar","idnumber":"","firstname":"Foo","lastname":"Bar","email":"foo@bar.com","lang":"en","phone1":"5551619192","auth":"manual","country":"foo","description":"bar"}`
 
+Note: If testing in Postman, you need to set encoding to `x-www-form-urlencoded` for POST requests.
+
 
 
 **This plugin has been tested on Moodle 2.8 and Moodle 3.0**
