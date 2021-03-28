@@ -40,7 +40,7 @@ Oauth2 Library has been taken from https://github.com/bshaffer/oauth2-server-php
 
 6. Finally, send a POST request to `http://moodledomain.com/local/oauth/user_info.php` passing the access token as a parameter, like: `{'access_token':'79d687a0ea4910c6662b2e38116528fdcd65f0d1'}`. 
 
-7. If the token given is valid, a JSON containing the user information is returned. Ex: `{"id":"22","username":"foobar","idnumber":"","firstname":"Foo","lastname":"Bar","email":"foo@bar.com","lang":"en","phone1":"5551619192"}`
+7. If the token given is valid, a JSON containing the user information is returned. Ex: `{"id":"22","username":"foobar","idnumber":"","firstname":"Foo","lastname":"Bar","email":"foo@bar.com","lang":"en","phone1":"5551619192","auth":"manual","country":"foo","description":"bar"}`
 
 
 

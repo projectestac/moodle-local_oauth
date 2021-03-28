@@ -1,7 +1,7 @@
 <?php
 
-$string['pluginname'] = '乐学网认证(OAuth)';
-$string['settings'] = '乐学网认证(OAuth)设置';
+$string['pluginname'] = 'OAuth认证';
+$string['settings'] = 'OAuth认证设置';
 $string['addclient'] = '添加认证客户端';
 $string['addotherclient'] = '添加另一个认证客户端';
 $string['addnodesclient'] = '添加Àgora-Nodes客户端';
