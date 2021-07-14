@@ -11,8 +11,19 @@ use OAuth2\ResponseInterface;
  */
 class AuthorizeController extends BaseAuthorizeController implements AuthorizeControllerInterface
 {
+    /**
+     * @var mixed
+     */
     private $nonce;
 
+    /**
+     * Set not authorized response
+     *
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
+     * @param string            $redirect_uri
+     * @param null              $user_id
+     */
     protected function setNotAuthorizedResponse(RequestInterface $request, ResponseInterface $response, $redirect_uri, $user_id = null)
     {
         $prompt = $request->query('prompt', 'consent');
@@ -32,6 +43,14 @@ class AuthorizeController extends BaseAuthorizeController implements AuthorizeCo
         $response->setRedirect($this->config['redirect_status_code'], $redirect_uri, $this->getState(), $error, $error_message);
     }
 
+    /**
+     * @TODO: add dependency injection for the parameters in this method
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param mixed $user_id
+     * @return array
+     */
     protected function buildAuthorizeParameters($request, $response, $user_id)
     {
         if (!$params = parent::buildAuthorizeParameters($request, $response, $user_id)) {
@@ -49,6 +68,11 @@ class AuthorizeController extends BaseAuthorizeController implements AuthorizeCo
         return $params;
     }
 
+    /**
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return bool
+     */
     public function validateAuthorizeRequest(RequestInterface $request, ResponseInterface $response)
     {
         if (!parent::validateAuthorizeRequest($request, $response)) {
@@ -57,8 +81,8 @@ class AuthorizeController extends BaseAuthorizeController implements AuthorizeCo
 
         $nonce = $request->query('nonce');
 
-        // Validate required nonce for "id_token" and "token id_token"
-        if (!$nonce && in_array($this->getResponseType(), array(self::RESPONSE_TYPE_ID_TOKEN, self::RESPONSE_TYPE_TOKEN_ID_TOKEN))) {
+        // Validate required nonce for "id_token" and "id_token token"
+        if (!$nonce && in_array($this->getResponseType(), array(self::RESPONSE_TYPE_ID_TOKEN, self::RESPONSE_TYPE_ID_TOKEN_TOKEN))) {
             $response->setError(400, 'invalid_nonce', 'This application requires you specify a nonce parameter');
 
             return false;
@@ -69,13 +93,19 @@ class AuthorizeController extends BaseAuthorizeController implements AuthorizeCo
         return true;
     }
 
+    /**
+     * Array of valid response types
+     *
+     * @return array
+     */
     protected function getValidResponseTypes()
     {
         return array(
             self::RESPONSE_TYPE_ACCESS_TOKEN,
             self::RESPONSE_TYPE_AUTHORIZATION_CODE,
             self::RESPONSE_TYPE_ID_TOKEN,
-            self::RESPONSE_TYPE_TOKEN_ID_TOKEN,
+            self::RESPONSE_TYPE_ID_TOKEN_TOKEN,
+            self::RESPONSE_TYPE_CODE_ID_TOKEN,
         );
     }
 
@@ -86,11 +116,8 @@ class AuthorizeController extends BaseAuthorizeController implements AuthorizeCo
      * method checks whether OpenID Connect is enabled in the server settings
      * and whether the openid scope was requested.
      *
-     * @param $request_scope
-     *  A space-separated string of scopes.
-     *
-     * @return
-     *   TRUE if an id token is needed, FALSE otherwise.
+     * @param string $request_scope - A space-separated string of scopes.
+     * @return boolean - TRUE if an id token is needed, FALSE otherwise.
      */
     public function needsIdToken($request_scope)
     {
@@ -98,6 +125,9 @@ class AuthorizeController extends BaseAuthorizeController implements AuthorizeCo
         return $this->scopeUtil->checkScope('openid', $request_scope);
     }
 
+    /**
+     * @return mixed
+     */
     public function getNonce()
     {
         return $this->nonce;
