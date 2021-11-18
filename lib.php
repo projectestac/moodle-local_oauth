@@ -12,6 +12,7 @@ function oauth_get_server() {
     // Pass a storage object or array of storage objects to the OAuth2 server class
     $server = new OAuth2\Server($storage);
     $server->setConfig('enforce_state', false);
+    $server->setConfig('require_exact_redirect_uri', false);
 
     // Add the "Client Credentials" grant type (it is the simplest of the grant types)
     $server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
