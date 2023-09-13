@@ -7,37 +7,76 @@ use OAuth2\ScopeInterface;
 use OAuth2\RequestInterface;
 use OAuth2\ResponseInterface;
 use OAuth2\Scope;
+use InvalidArgumentException;
 
 /**
- * @see OAuth2\Controller\AuthorizeControllerInterface
+ * @see AuthorizeControllerInterface
  */
 class AuthorizeController implements AuthorizeControllerInterface
 {
+    /**
+     * @var string
+     */
     private $scope;
+
+    /**
+     * @var int
+     */
     private $state;
+
+    /**
+     * @var mixed
+     */
     private $client_id;
+
+    /**
+     * @var string
+     */
     private $redirect_uri;
+
+    /**
+     * The response type
+     *
+     * @var string
+     */
     private $response_type;
 
+    /**
+     * @var ClientInterface
+     */
     protected $clientStorage;
+
+    /**
+     * @var array
+     */
     protected $responseTypes;
+
+    /**
+     * @var array
+     */
     protected $config;
+
+    /**
+     * @var ScopeInterface
+     */
     protected $scopeUtil;
 
     /**
-     * @param OAuth2\Storage\ClientInterface $clientStorage REQUIRED Instance of OAuth2\Storage\ClientInterface to retrieve client information
-     * @param array                          $responseTypes OPTIONAL Array of OAuth2\ResponseType\ResponseTypeInterface objects.  Valid array
-     *                                                      keys are "code" and "token"
-     * @param array                          $config        OPTIONAL Configuration options for the server
-     *                                                      <code>
-     *                                                      $config = array(
-     *                                                      'allow_implicit' => false,            // if the controller should allow the "implicit" grant type
-     *                                                      'enforce_state'  => true              // if the controller should require the "state" parameter
-     *                                                      'require_exact_redirect_uri' => true, // if the controller should require an exact match on the "redirect_uri" parameter
-     *                                                      'redirect_status_code' => 302,        // HTTP status code to use for redirect responses
-     *                                                      );
-     *                                                      </code>
-     * @param OAuth2\ScopeInterface          $scopeUtil     OPTIONAL Instance of OAuth2\ScopeInterface to validate the requested scope
+     * Constructor
+     *
+     * @param ClientInterface $clientStorage REQUIRED Instance of OAuth2\Storage\ClientInterface to retrieve client information
+     * @param array           $responseTypes OPTIONAL Array of OAuth2\ResponseType\ResponseTypeInterface objects.  Valid array
+     *                                       keys are "code" and "token"
+     * @param array           $config        OPTIONAL Configuration options for the server:
+     * @param ScopeInterface  $scopeUtil     OPTIONAL Instance of OAuth2\ScopeInterface to validate the requested scope
+     * @code
+     *     $config = array(
+     *         'allow_implicit' => false,            // if the controller should allow the "implicit" grant type
+     *         'enforce_state'  => true              // if the controller should require the "state" parameter
+     *         'require_exact_redirect_uri' => true, // if the controller should require an exact match on the "redirect_uri" parameter
+     *         'redirect_status_code' => 302,        // HTTP status code to use for redirect responses
+     *     );
+     * @endcode
      */
     public function __construct(ClientInterface $clientStorage, array $responseTypes = array(), array $config = array(), ScopeInterface $scopeUtil = null)
     {
@@ -48,6 +87,7 @@ class AuthorizeController implements AuthorizeControllerInterface
             'enforce_state'  => true,
             'require_exact_redirect_uri' => true,
             'redirect_status_code' => 302,
+            'enforce_pkce' => false,
         ), $config);
 
         if (is_null($scopeUtil)) {
@@ -56,10 +96,20 @@ class AuthorizeController implements AuthorizeControllerInterface
         $this->scopeUtil = $scopeUtil;
     }
 
+    /**
+     * Handle the authorization request
+     *
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
+     * @param boolean           $is_authorized
+     * @param mixed             $user_id
+     * @return mixed|void
+     * @throws InvalidArgumentException
+     */
     public function handleAuthorizeRequest(RequestInterface $request, ResponseInterface $response, $is_authorized, $user_id = null)
     {
         if (!is_bool($is_authorized)) {
-            throw new \InvalidArgumentException('Argument "is_authorized" must be a boolean.  This method must know if the user has granted access to the client.');
+            throw new InvalidArgumentException('Argument "is_authorized" must be a boolean.  This method must know if the user has granted access to the client.');
         }
 
         // We repeat this, because we need to re-validate. The request could be POSTed
@@ -101,6 +151,14 @@ class AuthorizeController implements AuthorizeControllerInterface
         $response->setRedirect($this->config['redirect_status_code'], $uri);
     }
 
+    /**
+     * Set not authorized response
+     *
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
+     * @param string            $redirect_uri
+     * @param mixed             $user_id
+     */
     protected function setNotAuthorizedResponse(RequestInterface $request, ResponseInterface $response, $redirect_uri, $user_id = null)
     {
         $error = 'access_denied';
@@ -108,9 +166,16 @@ class AuthorizeController implements AuthorizeControllerInterface
         $response->setRedirect($this->config['redirect_status_code'], $redirect_uri, $this->state, $error, $error_message);
     }
 
-    /*
+    /**
      * We have made this protected so this class can be extended to add/modify
      * these parameters
+     *
+     * @TODO: add dependency injection for the parameters in this method
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param mixed $user_id
+     * @return array
      */
     protected function buildAuthorizeParameters($request, $response, $user_id)
     {
@@ -126,10 +191,17 @@ class AuthorizeController implements AuthorizeControllerInterface
         return $params;
     }
 
+    /**
+     * Validate the OAuth request
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return bool
+     */
     public function validateAuthorizeRequest(RequestInterface $request, ResponseInterface $response)
     {
         // Make sure a valid client id was supplied (we can not redirect because we were unable to verify the URI)
-        if (!$client_id = $request->query("client_id")) {
+        if (!$client_id = $request->query('client_id', $request->request('client_id'))) {
             // We don't have a good URI to use
             $response->setError(400, 'invalid_client', "No client id supplied");
 
@@ -149,7 +221,7 @@ class AuthorizeController implements AuthorizeControllerInterface
         // @see http://tools.ietf.org/html/rfc6749#section-3.1.2
         // @see http://tools.ietf.org/html/rfc6749#section-4.1.2.1
         // @see http://tools.ietf.org/html/rfc6749#section-4.2.2.1
-        if ($supplied_redirect_uri = $request->query('redirect_uri')) {
+        if ($supplied_redirect_uri = $request->query('redirect_uri', $request->request('redirect_uri'))) {
             // validate there is no fragment supplied
             $parts = parse_url($supplied_redirect_uri);
             if (isset($parts['fragment']) && $parts['fragment']) {
@@ -181,9 +253,17 @@ class AuthorizeController implements AuthorizeControllerInterface
             $redirect_uri = $registered_redirect_uri;
         }
 
-        // Select the redirect URI
-        $response_type = $request->query('response_type');
-        $state = $request->query('state');
+        // Select the response type
+        $response_type = $request->query('response_type', $request->request('response_type'));
+
+        // for multiple-valued response types - make them alphabetical
+        if (false !== strpos($response_type, ' ')) {
+            $types = explode(' ', $response_type);
+            sort($types);
+            $response_type = ltrim(implode(' ', $types));
+        }
+
+        $state = $request->query('state', $request->request('state'));
 
         // type and client_id are required
         if (!$response_type || !in_array($response_type, $this->getValidResponseTypes())) {
@@ -191,6 +271,7 @@ class AuthorizeController implements AuthorizeControllerInterface
 
             return false;
         }
+
         if ($response_type == self::RESPONSE_TYPE_AUTHORIZATION_CODE) {
             if (!isset($this->responseTypes['code'])) {
                 $response->setRedirect($this->config['redirect_status_code'], $redirect_uri, $state, 'unsupported_response_type', 'authorization code grant type not supported', null);
@@ -227,8 +308,8 @@ class AuthorizeController implements AuthorizeControllerInterface
             // restrict scope by client specific scope if applicable,
             // otherwise verify the scope exists
             $clientScope = $this->clientStorage->getClientScope($client_id);
-            if ((is_null($clientScope) && !$this->scopeUtil->scopeExists($requestedScope))
-                || ($clientScope && !$this->scopeUtil->checkScope($requestedScope, $clientScope))) {
+            if ((empty($clientScope) && !$this->scopeUtil->scopeExists($requestedScope))
+                || (!empty($clientScope) && !$this->scopeUtil->checkScope($requestedScope, $clientScope))) {
                 $response->setRedirect($this->config['redirect_status_code'], $redirect_uri, $state, 'invalid_scope', 'An unsupported scope was requested', null);
 
                 return false;
@@ -267,10 +348,10 @@ class AuthorizeController implements AuthorizeControllerInterface
     /**
      * Build the absolute URI based on supplied URI and parameters.
      *
-     * @param $uri    An absolute URI.
-     * @param $params Parameters to be append as GET.
+     * @param string $uri    An absolute URI.
+     * @param array  $params Parameters to be append as GET.
      *
-     * @return
+     * @return string
      * An absolute URI with supplied parameters.
      *
      * @ingroup oauth2_section_4
@@ -282,23 +363,15 @@ class AuthorizeController implements AuthorizeControllerInterface
         // Add our params to the parsed uri
         foreach ($params as $k => $v) {
             if (isset($parse_url[$k])) {
-                $parse_url[$k] .= "&" . http_build_query($v);
+                $parse_url[$k] .= "&" . http_build_query($v, '', '&');
             } else {
-                    // XTEC ************ MODIFICAT - build correct url
-                    // 2019.08.05 @nacho
-                    // 2019.08.05 @mborraz
-                    $parse_url[$k] = http_build_query($v,'','&');
-                    //************ ORIGINAL
-                    /*
-                        $parse_url[$k] = http_build_query($v);
-                    */
-                    //************ FI
-                    }
-                }
+                $parse_url[$k] = http_build_query($v, '', '&');
+            }
+        }
 
-        // Put humpty dumpty back together
+        // Put the uri back together
         return
-            ((isset($parse_url["scheme"])) ? $parse_url["scheme"] . "://" : "")
+              ((isset($parse_url["scheme"])) ? $parse_url["scheme"] . "://" : "")
             . ((isset($parse_url["user"])) ? $parse_url["user"]
             . ((isset($parse_url["pass"])) ? ":" . $parse_url["pass"] : "") . "@" : "")
             . ((isset($parse_url["host"])) ? $parse_url["host"] : "")
@@ -320,19 +393,19 @@ class AuthorizeController implements AuthorizeControllerInterface
     /**
      * Internal method for validating redirect URI supplied
      *
-     * @param string $inputUri            The submitted URI to be validated
+     * @param string $inputUri The submitted URI to be validated
      * @param string $registeredUriString The allowed URI(s) to validate against.  Can be a space-delimited string of URIs to
      *                                    allow for multiple URIs
-     *
+     * @return bool
      * @see http://tools.ietf.org/html/rfc6749#section-3.1.2
      */
-    private function validateRedirectUri($inputUri, $registeredUriString)
+    protected function validateRedirectUri($inputUri, $registeredUriString)
     {
         if (!$inputUri || !$registeredUriString) {
             return false; // if either one is missing, assume INVALID
         }
 
-        $registered_uris = explode(' ', $registeredUriString);
+        $registered_uris = preg_split('/\s+/', $registeredUriString);
         foreach ($registered_uris as $registered_uri) {
             if ($this->config['require_exact_redirect_uri']) {
                 // the input uri is validated against the registered uri using exact match
@@ -340,48 +413,67 @@ class AuthorizeController implements AuthorizeControllerInterface
                     return true;
                 }
             } else {
+                $registered_uri_length = strlen($registered_uri);
+                if ($registered_uri_length === 0) {
+                    return false;
+                }
+
                 // the input uri is validated against the registered uri using case-insensitive match of the initial string
                 // i.e. additional query parameters may be applied
-                if (strcasecmp(substr($inputUri, 0, strlen($registered_uri)), $registered_uri) === 0) {
+                if (strcasecmp(substr($inputUri, 0, $registered_uri_length), $registered_uri) === 0) {
                     return true;
                 }
             }
         }
-        //XTEC *********** AFEGIT Check also http
-        //@pferre22 20.02.2015
-        $nossl = preg_replace("/^https:/i", "http:", $inputUri);
-        if ($inputUri != $nossl) {
-            return $this->validateRedirectUri($nossl, $registeredUriString);
-        }
-        //FI PATCH
 
         return false;
     }
 
     /**
-     * Convenience methods to access the parameters derived from the validated request
+     * Convenience method to access the scope
+     *
+     * @return string
      */
-
     public function getScope()
     {
         return $this->scope;
     }
 
+    /**
+     * Convenience method to access the state
+     *
+     * @return int
+     */
     public function getState()
     {
         return $this->state;
     }
 
+    /**
+     * Convenience method to access the client id
+     *
+     * @return mixed
+     */
     public function getClientId()
     {
         return $this->client_id;
     }
 
+    /**
+     * Convenience method to access the redirect url
+     *
+     * @return string
+     */
     public function getRedirectUri()
     {
         return $this->redirect_uri;
     }
 
+    /**
+     * Convenience method to access the response type
+     *
+     * @return string
+     */
     public function getResponseType()
     {
         return $this->response_type;

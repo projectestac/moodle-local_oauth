@@ -74,9 +74,9 @@ class Memory implements AuthorizationCodeInterface,
         ), $this->authorizationCodes[$code]);
     }
 
-    public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null)
+    public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null, $code_challenge = null, $code_challenge_method = null)
     {
-        $this->authorizationCodes[$code] = compact('code', 'client_id', 'user_id', 'redirect_uri', 'expires', 'scope', 'id_token');
+        $this->authorizationCodes[$code] = compact('code', 'client_id', 'user_id', 'redirect_uri', 'expires', 'scope', 'id_token', 'code_challenge', 'code_challenge_method');
 
         return true;
     }
@@ -142,7 +142,7 @@ class Memory implements AuthorizationCodeInterface,
                     // address is an object with subfields
                     $userClaims['address'] = $this->getUserClaim($validClaim, $userDetails['address'] ?: $userDetails);
                 } else {
-                    $userClaims = array_merge($this->getUserClaim($validClaim, $userDetails));
+                    $userClaims = array_merge($userClaims, $this->getUserClaim($validClaim, $userDetails));
                 }
             }
         }
@@ -236,7 +236,13 @@ class Memory implements AuthorizationCodeInterface,
 
     public function unsetRefreshToken($refresh_token)
     {
-        unset($this->refreshTokens[$refresh_token]);
+        if (isset($this->refreshTokens[$refresh_token])) {
+            unset($this->refreshTokens[$refresh_token]);
+
+            return true;
+        }
+
+        return false;
     }
 
     public function setRefreshTokens($refresh_tokens)
@@ -255,6 +261,17 @@ class Memory implements AuthorizationCodeInterface,
         $this->accessTokens[$access_token] = compact('access_token', 'client_id', 'user_id', 'expires', 'scope', 'id_token');
 
         return true;
+    }
+
+    public function unsetAccessToken($access_token)
+    {
+        if (isset($this->accessTokens[$access_token])) {
+            unset($this->accessTokens[$access_token]);
+
+            return true;
+        }
+
+        return false;
     }
 
     public function scopeExists($scope)

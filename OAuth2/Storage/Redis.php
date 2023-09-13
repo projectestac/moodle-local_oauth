@@ -95,11 +95,11 @@ class Redis implements AuthorizationCodeInterface,
         return $this->getValue($this->config['code_key'] . $code);
     }
 
-    public function setAuthorizationCode($authorization_code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null)
+    public function setAuthorizationCode($authorization_code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null, $code_challenge = null, $code_challenge_method = null)
     {
         return $this->setValue(
             $this->config['code_key'] . $authorization_code,
-            compact('authorization_code', 'client_id', 'user_id', 'redirect_uri', 'expires', 'scope', 'id_token'),
+            compact('authorization_code', 'client_id', 'user_id', 'redirect_uri', 'expires', 'scope', 'id_token', 'code_challenge', 'code_challenge_method'),
             $expires
         );
     }
@@ -162,7 +162,7 @@ class Redis implements AuthorizationCodeInterface,
             return false;
         }
 
-        return empty($result['client_secret']);;
+        return empty($client['client_secret']);
     }
 
     /* ClientInterface */
@@ -209,7 +209,9 @@ class Redis implements AuthorizationCodeInterface,
 
     public function unsetRefreshToken($refresh_token)
     {
-        return $this->expireValue($this->config['refresh_token_key'] . $refresh_token);
+        $result = $this->expireValue($this->config['refresh_token_key'] . $refresh_token);
+
+        return $result > 0;
     }
 
     /* AccessTokenInterface */
@@ -225,6 +227,13 @@ class Redis implements AuthorizationCodeInterface,
             compact('access_token', 'client_id', 'user_id', 'expires', 'scope'),
             $expires
         );
+    }
+
+    public function unsetAccessToken($access_token)
+    {
+        $result = $this->expireValue($this->config['access_token_key'] . $access_token);
+
+        return $result > 0;
     }
 
     /* ScopeInterface */

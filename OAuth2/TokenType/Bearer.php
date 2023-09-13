@@ -91,7 +91,7 @@ class Bearer implements TokenTypeInterface
 
         // HEADER: Get the access token from the header
         if (!empty($headers)) {
-            if (!preg_match('/' . $this->config['token_bearer_header_name'] . '\s(\S+)/', $headers, $matches)) {
+            if (!preg_match('/' . $this->config['token_bearer_header_name'] . '\s(\S+)/i', $headers, $matches)) {
                 $response->setError(400, 'invalid_request', 'Malformed auth header');
 
                 return null;
@@ -109,7 +109,7 @@ class Bearer implements TokenTypeInterface
             }
 
             $contentType = $request->server('CONTENT_TYPE');
-            if (false !== $pos = strpos($contentType, ';')) {
+            if (false !== $pos = strpos((string) $contentType, ';')) {
                 $contentType = substr($contentType, 0, $pos);
             }
 
