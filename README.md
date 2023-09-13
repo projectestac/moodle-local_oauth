@@ -7,8 +7,8 @@ Oauth2 Library has been taken from https://github.com/bshaffer/oauth2-server-php
 * #### Moodle 2.8 o higher installed
 * #### Admin account
 
-## Instalation steps
-1. Clone this repository in a directory named "oauth".  `$ git clone https://github.com/cognitivabrasil/moodle-local_oauth.git oauth`
+## Installation steps
+1. Clone this repository in a directory named "oauth".  `$ git clone https://github.com/projectestac/moodle-local_oauth.git oauth`
 
 2. Compress it to a _.zip_ file.
 

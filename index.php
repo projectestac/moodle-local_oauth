@@ -1,7 +1,7 @@
 <?php
 require_once('../../config.php');
 require_once("{$CFG->libdir}/formslib.php");
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 require_once('forms.php');
 require_once('locallib.php');
 
@@ -11,10 +11,9 @@ require_capability('local/oauth:manageclients', context_system::instance());
 
 admin_externalpage_setup('local_oauth_settings');
 
-$action  = optional_param('action', '', PARAM_ALPHA);
+$action = optional_param('action', '', PARAM_ALPHA);
 
 echo $OUTPUT->header();
-
 echo $OUTPUT->heading(get_string('pluginname', 'local_oauth'));
 
 $view_table = false;
@@ -26,30 +25,33 @@ switch ($action) {
             $view_table = true;
             break;
         }
+
     case 'add':
         $bform = new local_oauth_clients_form();
         if ($bform->is_cancelled()) {
             $view_table = true;
             break;
-        } else if ($fromform=$bform->get_data() and confirm_sesskey()) {
-            //get values
+        }
+
+        if ($fromform = $bform->get_data() and confirm_sesskey()) {
+            // get values
             $record = new stdClass();
             $record->redirect_uri = $fromform->redirect_uri;
             $record->grant_types = $fromform->grant_types;
             $record->scope = $fromform->scope;
-            $record->user_id = $fromform->user_id ? $fromform->user_id :'';
+            $record->user_id = $fromform->user_id ? $fromform->user_id : '';
 
-            //do save
+            // do save
             if (!isset($client_edit)) {
                 $record->client_id = $fromform->client_id;
                 $record->client_secret = generate_secret();
                 if (!$DB->insert_record('oauth_clients', $record)) {
-                    print_error('insert_error', 'local_oauth');
+                    throw new \moodle_exception('insert_error', 'local_oauth');
                 }
             } else {
                 $record->id = $client_edit->id;
                 if (!$DB->update_record('oauth_clients', $record)) {
-                    print_error('update_error', 'local_oauth');
+                    throw new \moodle_exception('update_error', 'local_oauth');
                 }
             }
             echo $OUTPUT->notification(get_string('saveok', 'local_oauth'), 'notifysuccess');
@@ -58,51 +60,56 @@ switch ($action) {
         }
 
         $form = new stdClass();
-        //set values
+        // set values
         if (isset($client_edit)) {
-            $form->client_id           = $client_edit->client_id;
-            $form->redirect_uri        = $client_edit->redirect_uri;
-            $form->grant_types         = $client_edit->grant_types;
-            $form->scope               = $client_edit->scope;
-            $form->user_id             = $client_edit->user_id;
-            $form->action              = 'edit';
+            $form->client_id = $client_edit->client_id;
+            $form->redirect_uri = $client_edit->redirect_uri;
+            $form->grant_types = $client_edit->grant_types;
+            $form->scope = $client_edit->scope;
+            $form->user_id = $client_edit->user_id;
+            $form->action = 'edit';
         } else {
-            $form->client_id            = "";
-            $form->redirect_uri         = "";
-            $form->grant_types          = "authorization_code";
-            $form->scope                = "user_info";
-            $form->user_id              = "0";
-            $form->action               = 'add';
+            $form->client_id = '';
+            $form->redirect_uri = '';
+            $form->grant_types = 'authorization_code';
+            $form->scope = 'user_info';
+            $form->user_id = '0';
+            $form->action = 'add';
         }
         $bform->set_data($form);
         $bform->display();
 
         break;
+
     case 'addwordpress':
         $bform = new local_oauth_clients_wp_form();
         if ($bform->is_cancelled()) {
             $view_table = true;
             break;
-        } else if ($fromform=$bform->get_data() and confirm_sesskey()) {
-            if (!oauth_add_wordpress_client($fromform->client_id, $fromform->url)) {
-                print_error('insert_error', 'local_oauth');
+        } else {
+            if ($fromform = $bform->get_data() and confirm_sesskey()) {
+                if (!oauth_add_wordpress_client($fromform->client_id, $fromform->url)) {
+                    throw new \moodle_exception('insert_error', 'local_oauth');
+                }
+                echo $OUTPUT->notification(get_string('saveok', 'local_oauth'), 'notifysuccess');
+                $view_table = true;
+                break;
             }
-            echo $OUTPUT->notification(get_string('saveok', 'local_oauth'), 'notifysuccess');
-            $view_table = true;
-            break;
         }
         $bform->display();
         break;
+
     case 'addnodes':
         if (!oauth_add_wordpress_client('nodes', get_service_url('nodes'))) {
-            print_error('insert_error', 'local_oauth');
+            throw new \moodle_exception('insert_error', 'local_oauth');
         }
         echo $OUTPUT->notification(get_string('saveok', 'local_oauth'), 'notifysuccess');
         $view_table = true;
         break;
+
     case 'del':
         // Get values
-        $confirm   = optional_param('confirm', 0, PARAM_INT);
+        $confirm = optional_param('confirm', 0, PARAM_INT);
         $id = required_param('id', PARAM_TEXT);
 
         // Do delete
@@ -112,22 +119,23 @@ switch ($action) {
                 $view_table = true;
                 break;
             }
-            echo '<p>'.get_string('confirmdeletestr', 'local_oauth', $client_edit->client_id).'</p>
+            echo '<p>' . get_string('confirmdeletestr', 'local_oauth', $client_edit->client_id) . '</p>
                 <form action="index.php" method="GET">
                     <input type="hidden" name="action" value="del" />
                     <input type="hidden" name="confirm" value="1" />
-                    <input type="hidden" name="id" value="'.$id.'" />
-                    <input type="submit" value="'.get_string('confirm').'" /> <input type="button" value="'.get_string('cancel').'" onclick="javascript:history.back();" />
+                    <input type="hidden" name="id" value="' . $id . '" />
+                    <input type="submit" value="' . get_string('confirm') . '" /> <input type="button" value="' . get_string('cancel') . '" onclick="javascript:history.back();" />
                 </form>';
         } else {
             if (!$DB->delete_records('oauth_clients', array('id' => $id))) {
-                print_error('delete_error', 'local_oauth');
+                throw new \moodle_exception('delete_error', 'local_oauth');
             }
             echo $OUTPUT->notification(get_string('delok', 'local_oauth'), 'notifysuccess');
             $view_table = true;
             break;
         }
         break;
+
     default:
         $view_table = true;
         break;
@@ -138,12 +146,12 @@ if ($view_table) {
 
     if (function_exists('is_agora') && is_agora()) {
         if (is_service_enabled('nodes') && !$DB->record_exists('oauth_clients', array('client_id' => 'nodes'))) {
-            echo '<a href="index.php?action=addnodes" class="btn btn-primary" style="margin-right: 10px;">'.get_string('addnodesclient', 'local_oauth').'</a>';
+            echo '<a href="index.php?action=addnodes" class="btn btn-primary" style="margin-right: 10px;">' . get_string('addnodesclient', 'local_oauth') . '</a>';
         }
-        echo '<a href="index.php?action=addwordpress" class="btn btn-primary" style="margin-right: 10px;">'.get_string('addwordpressclient', 'local_oauth').'</a>';
-        echo '<a href="index.php?action=add" class="btn">'.get_string('addotherclient', 'local_oauth').'</a>';
+        echo '<a href="index.php?action=addwordpress" class="btn btn-primary" style="margin-right: 10px;">' . get_string('addwordpressclient', 'local_oauth') . '</a>';
+        echo '<a href="index.php?action=add" class="btn">' . get_string('addotherclient', 'local_oauth') . '</a>';
     } else {
-        echo '<a href="index.php?action=add" class="btn">'.get_string('addclient', 'local_oauth').'</a>';
+        echo '<a href="index.php?action=add" class="btn">' . get_string('addclient', 'local_oauth') . '</a>';
     }
 
     echo '</p>';
@@ -154,12 +162,12 @@ if ($view_table) {
         $table = new html_table();
         $table->class = 'generaltable generalbox';
         $table->head = array(
-                            get_string('client_id', 'local_oauth'),
-                            get_string('client_secret', 'local_oauth'),
-                            get_string('grant_types', 'local_oauth'),
-                            get_string('scope', 'local_oauth'),
-                            get_string('user_id', 'local_oauth'),
-                            get_string('actions'));
+            get_string('client_id', 'local_oauth'),
+            get_string('client_secret', 'local_oauth'),
+            get_string('grant_types', 'local_oauth'),
+            get_string('scope', 'local_oauth'),
+            get_string('user_id', 'local_oauth'),
+            get_string('actions'));
         $table->align = array('left', 'left', 'center', 'center', 'center', 'center', 'center');
 
         foreach ($clients as $client) {
@@ -169,7 +177,7 @@ if ($view_table) {
             $row[] = $client->grant_types;
             $row[] = $client->scope;
             $row[] = $client->user_id;
-            $row[] = "<a href=\"index.php?action=edit&id=".$client->id."\">".get_string('edit')."</a> | <a href=\"index.php?action=del&id=".$client->id."\">".get_string('delete')."</a>";
+            $row[] = "<a href=\"index.php?action=edit&id=" . $client->id . "\">" . get_string('edit') . "</a> | <a href=\"index.php?action=del&id=" . $client->id . "\">" . get_string('delete') . "</a>";
             $table->data[] = $row;
         }
         echo html_writer::table($table);

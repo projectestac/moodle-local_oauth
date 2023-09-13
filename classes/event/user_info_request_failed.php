@@ -40,6 +40,7 @@ class user_info_request_failed extends user_info_request {
     /**
      * Return localised event name.
      *
+     * @throws \coding_exception
      * @return string
      */
     public static function get_name() {
@@ -49,6 +50,7 @@ class user_info_request_failed extends user_info_request {
     /**
      * Custom validation.
      *
+     * @throws \coding_exception
      * @return void
      */
     protected function validate_data() {
@@ -63,7 +65,7 @@ class user_info_request_failed extends user_info_request {
      * @return array
      */
     protected function get_legacy_logdata() {
-        $userid = isset($this->userid) ? $this->userid : null;
+        $userid = $this->userid ?? null;
         return array(SITEID, 'local_oauth', 'user_info_request_failed', '', $this->get_description(), 0, $userid);
     }
 

@@ -4,7 +4,7 @@ function oauth_get_server() {
     global $CFG;
 
     // Autoloading (composer is preferred, but for this example let's just do this)
-    require_once($CFG->dirroot.'/local/oauth/OAuth2/Autoloader.php');
+    require_once($CFG->dirroot . '/local/oauth/OAuth2/Autoloader.php');
     OAuth2\Autoloader::register();
 
     $storage = new OAuth2\Storage\Moodle(array());
@@ -23,7 +23,9 @@ function oauth_get_server() {
 }
 
 function get_authorization_from_form($url, $clientid, $scope = false) {
+ 
     global $CFG, $OUTPUT, $USER;
+ 
     require_once("{$CFG->libdir}/formslib.php");
     require_once('forms.php');
 
@@ -34,7 +36,9 @@ function get_authorization_from_form($url, $clientid, $scope = false) {
     $mform = new local_oauth_authorize_form($url);
     if ($mform->is_cancelled()) {
         return false;
-    } else if ($fromform = $mform->get_data() and confirm_sesskey()) {
+    }
+
+    if ($fromform = $mform->get_data() and confirm_sesskey()) {
         authorize_user_scope($USER->id, $clientid, $scope);
         return true;
     }
@@ -42,7 +46,9 @@ function get_authorization_from_form($url, $clientid, $scope = false) {
     echo $OUTPUT->header();
     $mform->display();
     echo $OUTPUT->footer();
+
     die();
+
 }
 
 
@@ -51,13 +57,13 @@ function is_scope_authorized_by_user($userid, $clientid, $scope = false) {
     if (!$scope) {
         $scope = 'login';
     }
-    return $DB->record_exists('oauth_user_auth_scopes', array('client_id' => $clientid, 'scope' => $scope, 'user_id' =>  $userid));
+    return $DB->record_exists('oauth_user_auth_scopes', array('client_id' => $clientid, 'scope' => $scope, 'user_id' => $userid));
 }
 
 function authorize_user_scope($userid, $clientid, $scope = false) {
     global $DB;
     if (!$scope) {
-    	$scope = 'login';
+        $scope = 'login';
     }
     $record = new StdClass();
     $record->client_id = $clientid;

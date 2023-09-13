@@ -41,6 +41,7 @@ class user_granted extends \core\event\base {
     /**
      * Return localised event name.
      *
+     * @throws \coding_exception
      * @return string
      */
     public static function get_name() {
@@ -68,6 +69,7 @@ class user_granted extends \core\event\base {
     /**
      * Init method.
      *
+     * @throws \dml_exception
      * @return void
      */
     protected function init() {
@@ -80,6 +82,7 @@ class user_granted extends \core\event\base {
     /**
      * Custom validation.
      *
+     * @throws \coding_exception
      * @return void
      */
     protected function validate_data() {
