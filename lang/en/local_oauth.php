@@ -33,6 +33,33 @@ $string['delete_error'] = 'Error occurred deleting client';
 
 $string['scope_user_info'] = 'User Profile Information';
 
+$string['privacy:metadata:oauth_clients'] = 'OAuth client registrations associated with a user.';
+$string['privacy:metadata:oauth_clients:clientid'] = 'The OAuth client identifier.';
+$string['privacy:metadata:oauth_clients:redirecturi'] = 'The URL to which the OAuth client redirects users.';
+$string['privacy:metadata:oauth_clients:granttypes'] = 'The OAuth grant types available to the client.';
+$string['privacy:metadata:oauth_clients:scope'] = 'The OAuth scopes available to the client.';
+$string['privacy:metadata:oauth_clients:userid'] = 'The user associated with the OAuth client.';
+$string['privacy:metadata:oauth_access_tokens'] = 'OAuth access tokens issued to a user.';
+$string['privacy:metadata:oauth_access_tokens:clientid'] = 'The OAuth client that received the access token.';
+$string['privacy:metadata:oauth_access_tokens:userid'] = 'The user to whom the access token was issued.';
+$string['privacy:metadata:oauth_access_tokens:expires'] = 'The time when the access token expires.';
+$string['privacy:metadata:oauth_access_tokens:scope'] = 'The OAuth scopes granted to the access token.';
+$string['privacy:metadata:oauth_authorization_codes'] = 'OAuth authorization codes issued to a user.';
+$string['privacy:metadata:oauth_authorization_codes:clientid'] = 'The OAuth client that received the authorization code.';
+$string['privacy:metadata:oauth_authorization_codes:userid'] = 'The user to whom the authorization code was issued.';
+$string['privacy:metadata:oauth_authorization_codes:redirecturi'] = 'The URL to which the OAuth client redirects after authorization.';
+$string['privacy:metadata:oauth_authorization_codes:expires'] = 'The time when the authorization code expires.';
+$string['privacy:metadata:oauth_authorization_codes:scope'] = 'The OAuth scopes granted by the authorization code.';
+$string['privacy:metadata:oauth_refresh_tokens'] = 'OAuth refresh tokens issued to a user.';
+$string['privacy:metadata:oauth_refresh_tokens:clientid'] = 'The OAuth client that received the refresh token.';
+$string['privacy:metadata:oauth_refresh_tokens:userid'] = 'The user to whom the refresh token was issued.';
+$string['privacy:metadata:oauth_refresh_tokens:expires'] = 'The time when the refresh token expires.';
+$string['privacy:metadata:oauth_refresh_tokens:scope'] = 'The OAuth scopes granted to the refresh token.';
+$string['privacy:metadata:oauth_user_auth_scopes'] = 'OAuth scopes a user has authorised for a client.';
+$string['privacy:metadata:oauth_user_auth_scopes:clientid'] = 'The OAuth client authorised by the user.';
+$string['privacy:metadata:oauth_user_auth_scopes:userid'] = 'The user who authorised the OAuth scope.';
+$string['privacy:metadata:oauth_user_auth_scopes:scope'] = 'The OAuth scope authorised by the user.';
+
 $string['event_user_not_granted'] = 'User not granted';
 $string['event_user_granted'] = 'User granted';
 $string['event_user_info_request'] = 'User info requested';
