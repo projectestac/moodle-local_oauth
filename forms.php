@@ -18,7 +18,7 @@ class local_oauth_clients_form extends moodleform {
 
         $action = optional_param('action', false, PARAM_TEXT);
         if ($action === 'edit') {
-            $id = required_param('id', PARAM_TEXT);
+            $id = required_param('id', PARAM_INT);
             $bform->addElement('hidden', 'id', $id);
             $bform->setType('id', PARAM_INT);
             $bform->hardFreeze('client_id');

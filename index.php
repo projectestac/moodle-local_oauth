@@ -19,7 +19,7 @@ echo $OUTPUT->heading(get_string('pluginname', 'local_oauth'));
 $view_table = false;
 switch ($action) {
     case 'edit':
-        $id = required_param('id', PARAM_TEXT);
+        $id = required_param('id', PARAM_INT);
         if (!$client_edit = $DB->get_record('oauth_clients', array('id' => $id))) {
             echo $OUTPUT->notification(get_string('client_not_exists', 'local_oauth'));
             $view_table = true;
@@ -100,6 +100,7 @@ switch ($action) {
         break;
 
     case 'addnodes':
+        require_sesskey();
         if (!oauth_add_wordpress_client('nodes', get_service_url('nodes'))) {
             throw new \moodle_exception('insert_error', 'local_oauth');
         }
@@ -110,23 +111,22 @@ switch ($action) {
     case 'del':
         // Get values
         $confirm = optional_param('confirm', 0, PARAM_INT);
-        $id = required_param('id', PARAM_TEXT);
+        $id = required_param('id', PARAM_INT);
+
+        if (!$client_edit = $DB->get_record('oauth_clients', array('id' => $id))) {
+            echo $OUTPUT->notification(get_string('client_not_exists', 'local_oauth'));
+            $view_table = true;
+            break;
+        }
 
         // Do delete
         if (empty($confirm)) {
-            if (!$client_edit = $DB->get_record('oauth_clients', array('id' => $id))) {
-                echo $OUTPUT->notification(get_string('client_not_exists', 'local_oauth'));
-                $view_table = true;
-                break;
-            }
-            echo '<p>' . get_string('confirmdeletestr', 'local_oauth', $client_edit->client_id) . '</p>
-                <form action="index.php" method="GET">
-                    <input type="hidden" name="action" value="del" />
-                    <input type="hidden" name="confirm" value="1" />
-                    <input type="hidden" name="id" value="' . $id . '" />
-                    <input type="submit" value="' . get_string('confirm') . '" /> <input type="button" value="' . get_string('cancel') . '" onclick="javascript:history.back();" />
-                </form>';
+            // The continue button sends the request by POST and includes the sesskey.
+            $continueurl = new moodle_url('/local/oauth/index.php', array('action' => 'del', 'id' => $id, 'confirm' => 1));
+            $cancelurl = new moodle_url('/local/oauth/index.php');
+            echo $OUTPUT->confirm(get_string('confirmdeletestr', 'local_oauth', s($client_edit->client_id)), $continueurl, $cancelurl);
         } else {
+            require_sesskey();
             if (!$DB->delete_records('oauth_clients', array('id' => $id))) {
                 throw new \moodle_exception('delete_error', 'local_oauth');
             }
@@ -146,7 +146,7 @@ if ($view_table) {
 
     if (function_exists('is_agora') && is_agora()) {
         if (is_service_enabled('nodes') && !$DB->record_exists('oauth_clients', array('client_id' => 'nodes'))) {
-            echo '<a href="index.php?action=addnodes" class="btn btn-primary" style="margin-right: 10px;">' . get_string('addnodesclient', 'local_oauth') . '</a>';
+            echo '<a href="index.php?action=addnodes&sesskey=' . sesskey() . '" class="btn btn-primary" style="margin-right: 10px;">' . get_string('addnodesclient', 'local_oauth') . '</a>';
         }
         echo '<a href="index.php?action=addwordpress" class="btn btn-primary" style="margin-right: 10px;">' . get_string('addwordpressclient', 'local_oauth') . '</a>';
         echo '<a href="index.php?action=add" class="btn">' . get_string('addotherclient', 'local_oauth') . '</a>';
