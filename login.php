@@ -29,15 +29,25 @@ $clientid = required_param('client_id', PARAM_RAW);
 $responsetype = required_param('response_type', PARAM_RAW);
 $scope = optional_param('scope', false, PARAM_TEXT);
 $state = optional_param('state', false, PARAM_TEXT);
-$url = $CFG->wwwroot . '/local/oauth/login.php?client_id=' . $clientid . '&response_type=' . $responsetype;
+// PARAM_RAW because the OAuth server requires an exact match with the registered redirect URI.
+$redirecturi = optional_param('redirect_uri', false, PARAM_RAW);
+
+// Keep all the parameters of the authorization request, so they are not lost after the login or the consent form.
+$params = array('client_id' => $clientid, 'response_type' => $responsetype);
+
+if ($redirecturi) {
+    $params['redirect_uri'] = $redirecturi;
+}
 
 if ($scope) {
-    $url .= '&scope=' . $scope;
+    $params['scope'] = $scope;
 }
 
 if ($state) {
-    $url .= '&state=' . $state;
+    $params['state'] = $state;
 }
+
+$url = new moodle_url('/local/oauth/login.php', $params);
 
 $PAGE->set_url($CFG->wwwroot . '/local/oauth/login.php');
 $PAGE->set_context(context_system::instance());
@@ -74,6 +84,6 @@ if (isloggedin() && !isguestuser()) {
     $server->handleAuthorizeRequest($request, $response, $isauthorized, $USER->id);
     $response->send();
 } else {
-    $SESSION->wantsurl = $url;
+    $SESSION->wantsurl = $url->out(false);
     redirect(new moodle_url('/login/index.php'));
 }
