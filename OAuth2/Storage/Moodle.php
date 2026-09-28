@@ -38,7 +38,14 @@ class Moodle implements
     public function checkClientCredentials($client_id, $client_secret = null) {
         global $DB;
         $client_secret_db = $DB->get_field('oauth_clients', 'client_secret', ['client_id' => $client_id]);
-        return $client_secret == $client_secret_db;
+
+        // Unknown clients and clients without secret (public clients) cannot authenticate with a secret.
+        if (empty($client_secret_db) || $client_secret === null) {
+            return false;
+        }
+
+        // Constant-time comparison to prevent timing attacks.
+        return hash_equals((string)$client_secret_db, (string)$client_secret);
     }
 
     public function isPublicClient($client_id) {
@@ -326,9 +333,13 @@ class Moodle implements
     /* ScopeInterface */
     public function scopeExists($scope) {
         global $DB;
-        $scope = explode(' ', $scope);
-        $whereIn = implode(',', array_fill(0, count($scope), '?'));
-        $count = $DB->count_records_sql('SELECT count(scope) as count FROM {oauth_scopes} WHERE scope IN (' . $whereIn . ')');
+        $scope = array_unique(preg_split('/\s+/', trim($scope), -1, PREG_SPLIT_NO_EMPTY));
+        if (empty($scope)) {
+            return false;
+        }
+
+        [$insql, $params] = $DB->get_in_or_equal($scope);
+        $count = $DB->count_records_select('oauth_scopes', 'scope ' . $insql, $params);
 
         return $count == count($scope);
     }
