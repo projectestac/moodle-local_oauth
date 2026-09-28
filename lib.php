@@ -13,6 +13,11 @@ function oauth_get_server() {
     $server = new OAuth2\Server($storage);
     $server->setConfig('enforce_state', false);
 
+    // Do not issue refresh tokens: the refresh_token grant type is not enabled, so they could not be used.
+    // When a response type is added, the server no longer creates the default ones, so "code" must be added too.
+    $server->addResponseType(new OAuth2\ResponseType\AccessToken($storage, null), 'token');
+    $server->addResponseType(new OAuth2\ResponseType\AuthorizationCode($storage), 'code');
+
     // Add the "Client Credentials" grant type (it is the simplest of the grant types)
     $server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
 
