@@ -4,7 +4,7 @@ function oauth_get_server() {
     global $CFG;
 
     // Autoloading (composer is preferred, but for this example let's just do this)
-    require_once($CFG->dirroot . '/local/oauth/OAuth2/Autoloader.php');
+    require_once $CFG->dirroot . '/local/oauth/OAuth2/Autoloader.php';
     OAuth2\Autoloader::register();
 
     $storage = new OAuth2\Storage\Moodle(array());
@@ -38,8 +38,8 @@ function get_authorization_from_form($url, $clientid, $scope = false) {
  
     global $CFG, $OUTPUT, $USER;
  
-    require_once("{$CFG->libdir}/formslib.php");
-    require_once('forms.php');
+    require_once "{$CFG->libdir}/formslib.php";
+    require_once 'forms.php';
 
     if (is_scope_authorized_by_user($USER->id, $clientid, $scope)) {
         return true;

@@ -45,9 +45,9 @@ class clean extends \core\task\scheduled_task {
         global $DB;
 
         mtrace("Deleting expired tokens...", "\n");
-        $time = time();
-        $DB->delete_records_select('oauth_access_tokens', 'expires < :time', array('time' => $time));
-        $DB->delete_records_select('oauth_authorization_codes', 'expires < :time', array('time' => $time));
-        $DB->delete_records_select('oauth_refresh_tokens', 'expires < :time', array('time' => $time));
+        $params = ['time' => time()];
+        foreach (['oauth_access_tokens', 'oauth_authorization_codes', 'oauth_refresh_tokens'] as $table) {
+            $DB->delete_records_select($table, 'expires < :time', $params);
+        }
     }
 }
