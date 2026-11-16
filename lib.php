@@ -13,9 +13,9 @@ function oauth_get_server() {
     $server = new OAuth2\Server($storage);
     $server->setConfig('enforce_state', false);
 
-    // Do not issue refresh tokens: the refresh_token grant type is not enabled, so they could not be used.
+    // Issue refresh tokens only to the clients that have the "refresh_token" grant type.
     // When a response type is added, the server no longer creates the default ones, so "code" must be added too.
-    $server->addResponseType(new OAuth2\ResponseType\AccessToken($storage, null), 'token');
+    $server->addResponseType(new \local_oauth\access_token($storage, $storage, $storage), 'token');
     $server->addResponseType(new OAuth2\ResponseType\AuthorizationCode($storage), 'code');
 
     // Add the "Client Credentials" grant type (it is the simplest of the grant types)
@@ -23,6 +23,13 @@ function oauth_get_server() {
 
     // Add the "Authorization Code" grant type (this is where the oauth magic happens)
     $server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
+
+    // Add the "Refresh Token" grant type. Refresh tokens are rotated: each use returns a new one and invalidates
+    // the one used.
+    $server->addGrantType(new OAuth2\GrantType\RefreshToken($storage, [
+        'always_issue_new_refresh_token' => true,
+        'unset_refresh_token_after_use' => true,
+    ]));
 
     return $server;
 }
